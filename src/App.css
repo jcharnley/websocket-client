@@ -24,9 +24,61 @@
   color: white;
 }
 
+.loginWindowContainer {
+  margin: 0 auto;
+  margin-top: 5rem;
+  width: 30vw;
+  height: 30vh;
+  border: 1px solid;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.container .h6 {
+  padding: 16px;
+}
+.inputName {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.login {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+h5 {
+  margin-bottom: 0;
+}
+.loginButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+button:hover {
+  opacity: 0.8;
+}
+
 .App-link {
   color: #61dafb;
 }
+
+form {
+  display: flex;
+}
+
 
 @keyframes App-logo-spin {
   from {

@@ -113,7 +113,7 @@ class App extends React.Component {
         this.addMessage(data);
       } else {
         if (data === true) {
-          this.state.messages = [];
+          this.setState({messages: []})
         }
       }
     };
@@ -178,7 +178,7 @@ class App extends React.Component {
           clear: true
         })
       );
-      this.state.messages = [];
+      this.setState({messages: []})
     } else {
       console.log("exit delete");
     }

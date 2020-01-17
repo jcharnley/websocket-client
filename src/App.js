@@ -11,15 +11,25 @@ const ChatWindowContainer = styled.div``;
 const CombinedContainer = styled.div`
   display: flex;
 `;
-const OnlineContainer = styled.div`
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 10%;
+`;
+const OnlineContainer = styled.div`
+  width: 100%;
+  height: 100%;
   border: 1px solid blue;
   overflow: scroll;
 `;
 
+const DeleteButton = styled.button`
+background-color: red;
+color: white;
+`
 const Online = styled.h5`
   text-align: center;
-  margin-right: 3rem;
+  // margin-right: 3rem;
 `;
 
 const TableContainer = styled.div`
@@ -35,16 +45,25 @@ const Table = styled.table`
 `;
 const TableBody = styled.tbody``;
 
-const TableRow = styled.td`
+const TableRowUser = styled.td`
   padding: 0;
-  > last-child {
-    position: sticky;
-    bottom: 0;
-  }
+  font-weight: 700;
+  color: green;
+`;
+
+const TableRowMessage = styled.td`
+  padding: 0.4rem 0 0.4rem 0;
+  border-bottom: 1px solid lightgrey;
+  // > last-child {
+  //   position: sticky;
+  //   bottom: 0;
+  // }
 `;
 const TableRowTimeStamp = styled.td`
   padding: 0;
+  border-bottom: 1px solid lightgrey;
   text-align: right;
+  color: grey;
 `;
 
 const MessageButton = styled.button`
@@ -84,25 +103,18 @@ class App extends React.Component {
         console.error(error);
       });
 
-    wsClient.onopen = evt => {
-      // console.log("connected");
-    };
+    wsClient.onopen = evt => {};
 
     wsClient.onmessage = evt => {
-      // console.log("onmessage", evt.data);
-
-      if (evt.data === "wsId") {
-        console.log(true);
-      }
-      // on receiving a message, add it to the list of messages
-
       const data = JSON.parse(evt.data);
       if (typeof data === "number") {
         this.setState({ connections: data });
-      }
-
-      if (typeof data === "object" && Object.keys(data) !== "username") {
+      } else if (typeof data === "object" && Object.keys(data) !== "username") {
         this.addMessage(data);
+      } else {
+        if (data === true) {
+          this.state.messages = [];
+        }
       }
     };
 
@@ -155,6 +167,21 @@ class App extends React.Component {
       timeStamp: this.state.timeStamp
     };
     wsClient.send(JSON.stringify(message));
+    this.setState({ message: "", timeStamp: "" });
+  };
+
+  clearChat = () => {
+    const r = window.confirm("want to delete broadcast chat?");
+    if (r == true) {
+      wsClient.send(
+        JSON.stringify({
+          clear: true
+        })
+      );
+      this.state.messages = [];
+    } else {
+      console.log("exit delete");
+    }
   };
 
   login = () => {
@@ -203,16 +230,16 @@ class App extends React.Component {
                 const { date, time } = this.unixTimestampToHuman(
                   message.timeStamp
                 );
-                console.log("message", message);
                 if (Object.keys(message).includes("username")) {
-                  return null;
                 } else if (Object.entries(message).length != 0) {
                   return (
                     <tr key={index} ref={this.newData}>
-                      <TableRow width="5%" key={index}>
+                      <TableRowUser width="10%" key={index}>
                         {message.name}
-                      </TableRow>
-                      <TableRow width="80%">{message.message}</TableRow>
+                      </TableRowUser>
+                      <TableRowMessage width="75%">
+                        {message.message}
+                      </TableRowMessage>
                       <TableRowTimeStamp width="15%">{time}</TableRowTimeStamp>
                     </tr>
                   );
@@ -221,9 +248,19 @@ class App extends React.Component {
             </TableBody>
           </Table>
         </TableContainer>
-        <OnlineContainer>
-          <Online>Online: {this.state.connections}</Online>
-        </OnlineContainer>
+
+        <InfoContainer>
+          <DeleteButton
+            onClick={() => {
+              this.clearChat();
+            }}
+          >
+            Delete
+          </DeleteButton>
+          <OnlineContainer>
+            <Online>Online: {this.state.connections}</Online>
+          </OnlineContainer>
+        </InfoContainer>
       </CombinedContainer>
       <form action="." onSubmit={e => this.submitMessage(e)}>
         <InputMessage

@@ -1,24 +1,25 @@
 import React, { useRef } from 'react';
-import './App.css';
-import { AppContainer } from './app-styles';
-import UserLogin from './userLogin';
-import ChatInterface from './chatInterface';
-import WsMainRoom from './wsMainRoom';
+import { AppContainer } from '../styles/app-styles';
+import {UserSignIn} from './login';
+import WsMainRoom from './main-room';
 
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
 	withRouter,
+	RouteComponentProps,
 } from 'react-router-dom';
 
-class App extends React.Component {
+
+class App extends React.Component<RouteComponentProps<any>>
+{
 	render() {
 		return (
-			<AppContainer>
+			<AppContainer className="App Container">
 				<Router>
 					<Switch>
-						<Route exact path='/' component={UserLogin} />
+						<Route exact path='/' component={UserSignIn} />
 						<Route path='/chat' children={() => <WsMainRoom />} />
 					</Switch>
 				</Router>

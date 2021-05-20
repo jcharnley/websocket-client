@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { unixTimestamp } from './util';
-// import VideoChat from './videoChat';
+import { unixTimestamp } from '../util';
+import {OnlineUser} from '../components/online-users'
+import {PrivateRoom} from '../components/private-room'
+import {MessageInput} from '../components/message-input'
+// import VideoChat from './videoChat'
 
 import {
 	CombinedContainer,
@@ -17,11 +20,10 @@ import {
 	MessageButton,
 	InputMessage,
 	ChatWindowContainer,
-} from './app-styles';
+} from '../styles/app-styles';
 
 const WsMainRoom = () => {
 	let history = useHistory();
-
 	const [input, setInput] = React.useState('');
 	// const [inputVideo, setVideo] = React.useState({});
 	const [connection, setRemotePConnetion] = React.useState();
@@ -42,10 +44,12 @@ const WsMainRoom = () => {
 	};
 	// Video
 
-	let localstream;
-	let pc1;
-	let pc2;
+	let localstream :any;
+	let pc1: any;
+	let pc2: any;
 
+	console.log("hello")
+	
 	useEffect(() => {
 		// create websocket connection
 		ws.current = new WebSocket(`ws://localhost:8090`);
@@ -64,13 +68,15 @@ const WsMainRoom = () => {
 		};
 
 		fetch('/chat')
-			.then((response) => {
-				return response.json();
-			})
-			.then((responseJson) => {
-				setMessages(responseJson);
-			});
-
+		.then((response) => {
+			return response.json();
+		})
+		.then((responseJson) => {
+			setMessages(responseJson);
+		}).catch(error => {
+			console.log("error reaching /chat route", error)
+		});
+	
 		return () => {
 			ws.current.close();
 		};
@@ -195,6 +201,8 @@ const WsMainRoom = () => {
 		<div>
 			<ChatWindowContainer>
 				<CombinedContainer>
+				{/* <PrivateRoom>
+				</PrivateRoom> */}
 					<TableContainer>
 						<Table>
 							<TableBody>
@@ -216,76 +224,17 @@ const WsMainRoom = () => {
 					</TableContainer>
 
 					<InfoContainer>
-						<OnlineContainer>
-							<Online>
-								{connections.map((data, key) => (
-									<li key={key}>
-										{data.username}
-										<button
-											onClick={async (e) => {
-												const msg = 'this is a test pvt';
-												ws.current.send(
-													JSON.stringify({
-														type: 'private-message',
-														targetId: data.id,
-														targetName: data.username,
-														msg: msg,
-													})
-												);
-												await setUser({
-													type: 'private-message',
-													targetId: data.id,
-													targetName: data.username,
-													msg: msg,
-												});
-											}}
-										>
-											Private
-										</button>
-										<button
-											onClick={async () => {
-												// await makeCall(data.id);
-												getMediaFeed(data.id);
-											}}
-										>
-											Video
-										</button>
-									</li>
-								))}
-							</Online>
-						</OnlineContainer>
+					<OnlineUser connections={connections} current={ws.current} setUser={setUser}/>
 					</InfoContainer>
 				</CombinedContainer>
-				<div>
-					<InputMessage
-						type='text'
-						placeholder={'Enter message...'}
-						value={input}
-						onChange={(e) => setInput(e.target.value)}
-					/>
-					<MessageButton
-						onClick={() => {
-							ws.current.send(
-								JSON.stringify({
-									type: 'message',
-									name: setUsername,
-									message: input,
-									timeStamp: unixTimestamp(),
-								})
-							);
-						}}
-						type='submit'
-					>
-						Send
-					</MessageButton>
-				</div>
+				<MessageInput username={setUsername} current={ws.current} input={input} setInput={setInput} />
 			</ChatWindowContainer>
-			<video id={'this.props.id'} ref={videoTag} autoPlay>
+			{/* <video id={'this.props.id'} ref={videoTag} autoPlay>
 				Video 1
 			</video>
 			<video id={'this.props.id'} ref={videoTag2} autoPlay>
 				Video 2
-			</video>
+			</video> */}
 		</div>
 	);
 };

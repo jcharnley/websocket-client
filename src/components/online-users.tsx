@@ -1,50 +1,68 @@
 import React, { FunctionComponent } from 'react'; // importing FunctionComponent
-import { InfoContainer, OnlineContainer, Online } from '../styles/app-styles';
-type Users = {
-    connections: any,
-	current: any,
-	setUser: any,
+import styled from 'styled-components';
+import 'antd/dist/antd.css';
+// import { InfoContainer } from '../styles/app-styles';
+import { MessageOutlined } from '@ant-design/icons';
+import { Divider } from 'antd';
+
+type Rooms = {
+	connections: any;
+	current: any;
+	setRoomsList: any;
+	currentRooms: any;
 };
 
-export const OnlineUser: FunctionComponent<Users> = ({ connections, current, setUser }) => (
-	<OnlineContainer>
+const OnlineContainer = styled.div`
+	// list-style: none;
+`;
+
+const Online = styled.ul`
+	// text-align: center;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+`;
+
+const ListUser = styled.li`
+	height: 2rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Username = styled.span`
+	flex: 1;
+`;
+
+export const OnlineUser: FunctionComponent<Rooms> = ({ connections, current, setRoomsList, currentRooms }) => {
+let length = Object.keys(currentRooms).length;
+	return (
+
+		<OnlineContainer>
 		<Online>
 			{connections.map((data, key) => (
-				<li key={key}>
-					{data.username}
-					{/* <button
-						onClick={async (e) => {
-							// const msg = 'this is a test pvt';
-							current.send(
-								JSON.stringify({
-									type: 'private-message',
-									targetId: data.id,
-									targetName: data.username,
-									// msg: msg,
-								})
-							);
-							await setUser({
-								type: 'private-message',
-								targetId: data.id,
-								targetName: data.username,
-								// msg: msg,
-							});
-						}}
-					>
-						Private
-					</button>
-					<button
-						onClick={async () => {
-							// await makeCall(data.id);
-							// getMediaFeed(data.id);
-						}}
-					>
-						Video
-					</button> */}
-				</li>
+				<div key={key}>
+					<ListUser>
+						<Username>{data.username}</Username>
+						<MessageOutlined
+							style={{ marginRight: '5px' }}
+							onClick={async (e) => {
+								current.send(
+									JSON.stringify({
+										id: length,
+										type: 'private_messages_start',
+										targetId: data.id,
+										targetName: data.username,
+										privateRoomActive: true
+									})
+								);
+							}}
+						/>
+					</ListUser>
+					<Divider style={{ margin: 0 }} />
+				</div>
 			))}
 		</Online>
 	</OnlineContainer>
-);
-
-// const el = <Card title="Welcome!" paragraph="To this example" />
+	)
+};

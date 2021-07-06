@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -13,7 +14,7 @@
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
-    "antd": "^4.7.3",
+    "antd": "^4.15.6",
     "immer": "^9.0.2",
     "is-svg": "^4.3.1",
     "lodash": "^4.17.21",
@@ -52,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.2.1",
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",

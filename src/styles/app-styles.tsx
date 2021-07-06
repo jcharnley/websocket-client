@@ -25,15 +25,17 @@ export const DeleteButton = styled.button`
 `;
 export const Online = styled.ul`
 	text-align: center;
-	// margin-right: 3rem;
+
 `;
 
 export const TableContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	height: 90vh;
-	overflow: scroll;
+	overflow-y: scroll;
 	width: 90%;
+	border: 5px solid grey;
+	box-sizing: border-box;
 `;
 
 export const Table = styled.table`
@@ -50,7 +52,6 @@ export const TableRowUser = styled.td`
 export const TableRowMessage = styled.td`
 	padding: 0.4rem 0 0.4rem 0;
 	border-bottom: 1px solid lightgrey;
-
 `;
 export const TableRowTimeStamp = styled.td`
 	padding: 0;
@@ -68,5 +69,11 @@ export const InputMessage = styled.input`
 	height: 3rem;
 `;
 
-
 export const ChatWindowContainer = styled.div``;
+
+export const TextInputContainer = styled.div`
+	display: flex;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+`;

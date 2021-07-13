@@ -8,12 +8,7 @@ import { MessagingRooms } from '../components/messaging_rooms';
 import { FileInput } from '../components/file-input';
 // import VideoChat from './videoChat'
 
-import {
-	CombinedContainer,
-	InfoContainer,
-	ChatWindowContainer
-} from '../styles/app-styles';
-
+import { CombinedContainer, InfoContainer, ChatWindowContainer } from '../styles/app-styles';
 
 const WsMainRoom = () => {
 	let history = useHistory();
@@ -150,7 +145,7 @@ const WsMainRoom = () => {
 						/>
 					</InfoContainer>
 				</CombinedContainer>
-				<FileInput></FileInput>
+				<FileInput current={ws.current}></FileInput>
 				<MessageInput
 					username={setUsername}
 					current={ws.current}

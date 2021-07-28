@@ -6,9 +6,8 @@ const Heading = styled.h1<{ active: boolean }>`
 
 export const LoginContainer = styled.div`
 	margin: 0 auto;
-	border: 1px solid;
 	border-radius: 10px;
-	border: 3px solid #f1f1f1;
+	border: 2px solid #91d5ff;
 	display: flex;
 	justify-content: start;
 	flex-direction: column;

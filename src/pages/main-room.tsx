@@ -1,18 +1,24 @@
-import React, { useRef, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
-import { unixTimestamp } from '../util';
-import { OnlineUser } from '../components/online-users';
-import { MessageInput } from '../components/message-input';
-import { Roomlist } from '../pages/sub-pages/room-list';
-import { MessagingRooms } from '../components/messaging_rooms';
-import { FileInput } from '../components/file-input';
+import React, { useRef, useEffect, useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import { unixTimestamp } from "../util";
+import { OnlineUser } from "../components/online-users";
+import { MessageInput } from "../components/message-input";
+import { Roomlist } from "../pages/sub-pages/room-list";
+import { MessagingRooms } from "../components/messaging_rooms";
+import { FileInput } from "../components/file-input";
 // import VideoChat from './videoChat'
 
-import { CombinedContainer, InfoContainer, ChatWindowContainer } from '../styles/app-styles';
+import {
+	InputContainer,
+	CombinedContainer,
+	ChatWindowContainer,
+} from "../styles/app-styles";
+import { InfoContainer, OnlineContainer } from "../styles/online-users-styles";
 
 const WsMainRoom = () => {
 	let history = useHistory();
-	const [input, setInput] = React.useState('');
+	const [input, setInput] = React.useState("");
+	const [msgAlert, setMsgAlert] = React.useState({});
 	// const [inputVideo, setVideo] = React.useState({});
 	// const [connection, setRemotePConnetion] = React.useState();
 	const [messages, setMessages] = React.useState([]);
@@ -21,9 +27,9 @@ const WsMainRoom = () => {
 		[
 			{
 				id: 0,
-				name: 'main_room_placeholder',
-				message: 'null',
-				timeStamp: { date: 'Jul 06', time: '10:53:55' },
+				name: "main_room_placeholder",
+				message: "null",
+				timeStamp: { date: "Jul 06", time: "10:53:55" },
 			},
 		],
 	]);
@@ -33,12 +39,12 @@ const WsMainRoom = () => {
 		{
 			id: 0,
 			default: true,
-			targetName: 'main-room',
+			targetName: "general",
 		},
 	]);
 	const ws = useRef(null);
 	// let isActiveCurrent = useRef(isActive);
-	const setUsername = history.location.search.split('?')[1];
+	const setUsername = history.location.search.split("?")[1];
 
 	useEffect(() => {
 		// create websocket connection
@@ -46,7 +52,7 @@ const WsMainRoom = () => {
 		ws.current.onopen = () => {
 			ws.current.send(
 				JSON.stringify({
-					type: 'set_username',
+					type: "set_username",
 					setName: setUsername,
 					timeStamp: unixTimestamp(),
 				})
@@ -54,10 +60,10 @@ const WsMainRoom = () => {
 		};
 
 		ws.current.onclose = () => {
-			console.log('ws closed');
+			console.log("ws closed");
 		};
 
-		fetch('/chat')
+		fetch("/chat")
 			.then((response) => {
 				return response.json();
 			})
@@ -65,7 +71,7 @@ const WsMainRoom = () => {
 				setMessages(responseJson);
 			})
 			.catch((error) => {
-				console.log('error reaching /chat route', error);
+				console.log("error reaching /chat route", error);
 			});
 
 		return () => {
@@ -77,13 +83,18 @@ const WsMainRoom = () => {
 		ws.current.onmessage = async (e) => {
 			let data = JSON.parse(e.data);
 			switch (data.type) {
-				case 'message':
+				case "message":
+					console.log("data", data)
 					setMessages([...messages, data]);
+					setMsgAlert({
+						type: data.type,
+						newMsg: true
+					})
 					break;
-				case 'connections':
+				case "connections":
 					setConnections(data.connections);
 					break;
-				case 'private_room_created':
+				case "private_room_created":
 					await setRoomsList((currentRooms) => [
 						...currentRooms,
 						{
@@ -98,8 +109,10 @@ const WsMainRoom = () => {
 						},
 					]);
 					break;
-				case 'private_message_room':
-					const found = pvtMessages.find((x) => x[0].id === data.privateRoomMsg[0].id);
+				case "private_message_room":
+					const found = pvtMessages.find(
+						(x) => x[0].id === data.privateRoomMsg[0].id
+					);
 
 					if (found) {
 						setPvtMessages(
@@ -110,6 +123,11 @@ const WsMainRoom = () => {
 						);
 					} else {
 						setPvtMessages([...pvtMessages, [data.privateRoomMsg[0]]]);
+						setMsgAlert({
+							type: 'private_message',
+							data: data.privateRoomMsg[0],
+							newMsg: true
+						})
 					}
 					break;
 			}
@@ -118,33 +136,41 @@ const WsMainRoom = () => {
 		ws.current.onerror = (event) => {
 			console.error(event);
 		};
-		return () => {};
+		return () => { };
 	}, [messages, connections, isActive, pvtMessages]);
-	// console.log('pvtMessages', pvtMessages);
 
 	return (
-		<div>
-			<ChatWindowContainer id={'chatContainer'}>
-				<CombinedContainer id={'CombinedContainer'}>
-					<Roomlist rooms={currentRooms} isActive={isActive} setActive={setActive}></Roomlist>
-					<MessagingRooms
-						messages={
-							isActive === 0
-								? messages
-								: pvtMessages.find((obj) => {
-										if (obj[0].id === isActive) return obj;
-								  })
-						}
-					></MessagingRooms>
-					<InfoContainer>
-						<OnlineUser
-							connections={connections}
-							current={ws.current}
-							currentRooms={currentRooms}
-							setRoomsList={setRoomsList}
-						/>
-					</InfoContainer>
-				</CombinedContainer>
+		<ChatWindowContainer id={"chatContainer"} className={"chatContainerClass"}>
+			<InfoContainer className={"onlineInfoClass"}>
+				<OnlineUser
+					connections={connections}
+					current={ws.current}
+					currentRooms={currentRooms}
+					setRoomsList={setRoomsList}
+				/>
+			</InfoContainer>
+			<CombinedContainer
+				id={"CombinedContainer"}
+				className={"combinedContainerClass"}
+			>
+				<Roomlist
+					rooms={currentRooms}
+					isActive={isActive}
+					setActive={setActive}
+					msgAlert={msgAlert}
+					setMsgAlert={setMsgAlert}
+				></Roomlist>
+				<MessagingRooms
+					messages={
+						isActive === 0
+							? messages
+							: pvtMessages.find((obj) => {
+								if (obj[0].id === isActive) return obj;
+							})
+					}
+				></MessagingRooms>
+			</CombinedContainer>
+			<InputContainer className={"InputContainerClass"}>
 				<FileInput current={ws.current}></FileInput>
 				<MessageInput
 					username={setUsername}
@@ -153,8 +179,8 @@ const WsMainRoom = () => {
 					setInput={setInput}
 					rooms={currentRooms}
 				/>
-			</ChatWindowContainer>
-		</div>
+			</InputContainer>
+		</ChatWindowContainer>
 	);
 };
 

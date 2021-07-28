@@ -34,7 +34,7 @@ export const MessageInput: FunctionComponent<messageObject> = ({ current, userna
 	
 	const roomTarget = (roomList) => {
 
-		if (roomList.targetName === 'main-room') {
+		if (roomList.targetName === 'general') {
 			current.send(
 				JSON.stringify({
 					type: 'message',

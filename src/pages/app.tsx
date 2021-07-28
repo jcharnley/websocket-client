@@ -15,6 +15,7 @@ import {
 class App extends React.Component<RouteComponentProps<any>>
 {
 	render() {
+	
 		return (
 			<AppContainer className="App Container">
 				<Router>

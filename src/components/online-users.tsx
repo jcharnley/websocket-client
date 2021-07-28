@@ -17,10 +17,15 @@ const OnlineContainer = styled.div`
 `;
 
 const Online = styled.ul`
-	// text-align: center;
 	list-style: none;
 	padding: 0;
 	margin: 0;
+	display: flex;
+	overflow-y: scroll;
+	::-webkit-scrollbar { 
+		display: none;
+	}
+	
 `;
 
 const ListUser = styled.li`
@@ -32,20 +37,26 @@ const ListUser = styled.li`
 
 const Username = styled.span`
 	flex: 1;
+	padding-left: 2px;
+	font-size: 12px;
+	width: 50px;
 `;
 
 export const OnlineUser: FunctionComponent<Rooms> = ({ connections, current, setRoomsList, currentRooms }) => {
-let length = Object.keys(currentRooms).length;
+	let length = Object.keys(currentRooms).length;
 	return (
-
-		<OnlineContainer>
-		<Online>
-			{connections.map((data, key) => (
-				<div key={key}>
-					<ListUser>
-						<Username>{data.username}</Username>
+		<OnlineContainer className={'onlineUsersContainerClass'}>
+			<Online>
+				{connections.map((data, key) => (
+					<ListUser key={key}>
+						&nbsp;
+						<Username
+						title={data.username}
+						>{data.username}
+						</Username>
 						<MessageOutlined
-							style={{ marginRight: '5px' }}
+						    title={"private message"}
+							style={{ marginRight: '5px', fontSize: '12px' }}
 							onClick={async (e) => {
 								current.send(
 									JSON.stringify({
@@ -58,11 +69,12 @@ let length = Object.keys(currentRooms).length;
 								);
 							}}
 						/>
+						<Divider type={'vertical'} style={{margin: ""}}/>
 					</ListUser>
-					<Divider style={{ margin: 0 }} />
-				</div>
-			))}
-		</Online>
-	</OnlineContainer>
+
+
+				))}
+			</Online>
+		</OnlineContainer>
 	)
 };

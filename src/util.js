@@ -8,3 +8,5 @@ export const unixTimestamp = () => {
 		time: format[4],
 	};
 };
+
+// take seconds off .slice(0, -3)

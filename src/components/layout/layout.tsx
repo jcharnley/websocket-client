@@ -1,11 +1,7 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { LayoutContainer } from '../../styles/layout-styles';
-
+import React from "react";
 import { Layout } from 'antd';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
 const LayoutPage: React.FunctionComponent = ({ children }) => {
 	return (

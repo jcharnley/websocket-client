@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'; // importing FunctionComponent
-import { Roomlist } from '../pages/sub-pages/room-list';
+// import { Roomlist } from '../pages/sub-pages/room-list';
 import { InputMessage, MessageButton, TextInputContainer } from '../styles/app-styles';
 import { unixTimestamp } from '../util';
 

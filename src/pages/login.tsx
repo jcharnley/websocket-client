@@ -1,12 +1,11 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from "react";
 import { RouteComponentProps } from 'react-router-dom';
 import LayoutPage from '../components/layout/layout';
 import { LoginContainer, LoginMain } from '../styles/login-styles';
 import { Input, Tooltip } from 'antd';
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Radio } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+// import { DownloadOutlined } from '@ant-design/icons';
 
 interface SearchProps extends RouteComponentProps<any> {
 	history: any;
@@ -14,7 +13,7 @@ interface SearchProps extends RouteComponentProps<any> {
 
 export const UserSignIn: React.FunctionComponent<SearchProps> = ({ history }) => {
 	const [username, setName] = useState<string>('');
-	const [size, setSize] = useState<object>({ size: 'large' });
+	// const [size, setSize] = useState<object>({ size: 'large' });
 
 	return (
 		<LayoutPage>
@@ -41,9 +40,10 @@ export const UserSignIn: React.FunctionComponent<SearchProps> = ({ history }) =>
 					<Button
 						type='primary'
 						shape='round'
-						onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-							history.push(`/chat?${username}`);
-						}}
+						onClick={() => history.push(`/chat?${username}`)}
+						// onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+						// 	history.push(`/chat?${username}`);
+						// }}
 						// icon={<DownloadOutlined />}
 						size={'large'}
 					>

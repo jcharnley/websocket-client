@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { AppContainer } from '../styles/app-styles';
 import {UserSignIn} from './login';
 import WsMainRoom from './main-room';

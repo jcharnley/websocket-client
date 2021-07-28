@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react"; // importing FunctionComponent
-import styled from "styled-components";
+// import styled from "styled-components";
 import "antd/dist/antd.css";
-import { Divider } from "antd";
+// import { Divider } from "antd";
 import {
 	TableContainer,
 	Table,
@@ -21,16 +21,16 @@ type Rooms = {
 };
 
 export const MessagingRooms: FunctionComponent<Rooms> = ({ messages }) => {
-	let prev;
-	let current;
-	let forward;
-	if (messages === undefined) {
-	} else {
-		prev = messages.length - 1;
-		current = messages.length;
-		forward = messages.length + 1;
+	// let prev;
+	// let current;
+	// let forward;
+	// if (messages === undefined) {
+	// } else {
+	// 	prev = messages.length - 1;
+	// 	current = messages.length;
+	// 	forward = messages.length + 1;
 
-	}
+	// }
 
 	return (
 		<TableContainer className={"messagingRoomsClass"}>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { unixTimestamp } from "../util";
 import { OnlineUser } from "../components/online-users";
@@ -13,7 +13,7 @@ import {
 	CombinedContainer,
 	ChatWindowContainer,
 } from "../styles/app-styles";
-import { InfoContainer, OnlineContainer } from "../styles/online-users-styles";
+import { InfoContainer } from "../styles/online-users-styles";
 
 const WsMainRoom = () => {
 	let history = useHistory();
@@ -77,7 +77,7 @@ const WsMainRoom = () => {
 		return () => {
 			ws.current.close();
 		};
-	}, []);
+	}, [setUsername]);
 
 	useEffect(() => {
 		ws.current.onmessage = async (e) => {
@@ -165,7 +165,11 @@ const WsMainRoom = () => {
 						isActive === 0
 							? messages
 							: pvtMessages.find((obj) => {
-								if (obj[0].id === isActive) return obj;
+								if (obj[0].id === isActive){
+									return obj;
+								} else {
+									return null;
+								}
 							})
 					}
 				></MessagingRooms>

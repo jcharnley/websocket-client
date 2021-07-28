@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'; // importing FunctionComponent
 import { MessageOptions } from '../styles/file-input-styles';
-import { unixTimestamp } from '../util';
+// import { unixTimestamp } from '../util';
 
 type messageObject = {
 	// username: any;

@@ -29,6 +29,7 @@ const WsMainRoom = () => {
 				id: 0,
 				name: "main_room_placeholder",
 				message: "null",
+				privateRoomID: "main_room",
 				timeStamp: { date: "Jul 06", time: "10:53:55" },
 			},
 		],
@@ -45,6 +46,15 @@ const WsMainRoom = () => {
 	const ws = useRef(null);
 	// let isActiveCurrent = useRef(isActive);
 	const setUsername = history.location.search.split("?")[1];
+
+	// const settingNewMessage = (data) => {
+	// 	setMsgAlert({
+	// 		type: 'private_message',
+	// 		data: data.privateRoomMsg[0],
+	// 		privateRoomID: data.privateRoomMsg[0].privateRoomID,
+	// 		newMsg: true
+	// 	})
+	// } 
 
 	useEffect(() => {
 		// create websocket connection
@@ -84,7 +94,6 @@ const WsMainRoom = () => {
 			let data = JSON.parse(e.data);
 			switch (data.type) {
 				case "message":
-					console.log("data", data)
 					setMessages([...messages, data]);
 					setMsgAlert({
 						type: data.type,
@@ -95,37 +104,55 @@ const WsMainRoom = () => {
 					setConnections(data.connections);
 					break;
 				case "private_room_created":
-					await setRoomsList((currentRooms) => [
-						...currentRooms,
-						{
-							id: data.id,
-							targetId: data.targetId,
-							targetName: data.targetName,
-							fromClient: data.fromClient,
-							toClient: data.toClient,
-							privateRoomActive: data.privateRoomActive,
-							privateRoomID: data.privateRoomID,
-							default: false,
-						},
-					]);
+					console.log("data", data)
+					await setRoomsList((currentRooms) => {
+						return [
+							...currentRooms,
+							{
+								id: data.id,
+								targetId: data.targetId,
+								targetName: data.targetName,
+								fromClient: data.fromClient,
+								toClient: data.toClient,
+								privateRoomActive: data.privateRoomActive,
+								privateRoomID: data.privateRoomID,
+								default: false,
+							},
+						]
+					});
+					
 					break;
 				case "private_message_room":
 					const found = pvtMessages.find(
-						(x) => x[0].id === data.privateRoomMsg[0].id
+						(x, i) => {
+							console.log("x", x)
+							console.log("data.privateRoomMsg[0].id", data.privateRoomMsg[0].id)
+							return x[0].privateRoomID === data.privateRoomMsg[0].privateRoomID
+						}
+
 					);
 
 					if (found) {
 						setPvtMessages(
 							pvtMessages.map((x) => {
-								if (x[0].id !== data.privateRoomMsg[0].id) return x;
+								if (x[0].privateRoomID !== data.privateRoomMsg[0].privateRoomID) return x;
 								return [...x, data.privateRoomMsg.slice(-1)[0]];
 							})
 						);
-					} else {
-						setPvtMessages([...pvtMessages, [data.privateRoomMsg[0]]]);
 						setMsgAlert({
 							type: 'private_message',
 							data: data.privateRoomMsg[0],
+							privateRoomID: data.privateRoomMsg[0].privateRoomID,
+							newMsg: true
+						})
+					} else {
+						setPvtMessages([...pvtMessages, [data.privateRoomMsg[0]]]);
+						// console.log("pvtMessages", pvtMessages)
+
+						setMsgAlert({
+							type: 'private_message',
+							data: data.privateRoomMsg[0],
+							privateRoomID: data.privateRoomMsg[0].privateRoomID,
 							newMsg: true
 						})
 					}
@@ -137,14 +164,14 @@ const WsMainRoom = () => {
 			console.error(event);
 		};
 		return () => { };
-	}, [messages, connections, isActive, pvtMessages]);
-
+	}, [messages, connections, isActive, pvtMessages, currentRooms]);
 	return (
 		<ChatWindowContainer id={"chatContainer"} className={"chatContainerClass"}>
 			<InfoContainer className={"onlineInfoClass"}>
 				<OnlineUser
 					connections={connections}
 					current={ws.current}
+					//shouldnt need currentRooms here, need to remove when alternative is working
 					currentRooms={currentRooms}
 					setRoomsList={setRoomsList}
 				/>
@@ -162,10 +189,11 @@ const WsMainRoom = () => {
 				></Roomlist>
 				<MessagingRooms
 					messages={
-						isActive === 0
+						isActive === undefined
 							? messages
-							: pvtMessages.find((obj) => {
-								if (obj[0].id === isActive){
+							: pvtMessages.find((obj, i) => {
+								console.log("obj[0]",obj)
+								if (obj[0].privateRoomID === isActive) {
 									return obj;
 								} else {
 									return null;

@@ -72,7 +72,6 @@ export const MessageInput: FunctionComponent<messageObject> = ({ current, userna
 			/>
 			<MessageButton
 				onClick={() => {
-					// console.log('room selected', rooms);
 					rooms.forEach((roomList) => {
 						if (roomList.selected === true) {
 							roomTarget(roomList);

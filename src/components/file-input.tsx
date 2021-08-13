@@ -12,7 +12,7 @@ export const FileInput: FunctionComponent<messageObject> = ({ current }) => {
 	const handleFile = (e) => {
 		const content = e.target.result;
 		// console.log('file content', content);
-		console.log("fileMetaData", fileMetaData)
+		// console.log("fileMetaData", fileMetaData)
 		current.send(JSON.stringify({ type: 'filetransfer_incoming', message: content, metaData: fileMetaData.name }));
 		// You can set content in state and show it in render.
 	};

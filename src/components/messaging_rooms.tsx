@@ -40,7 +40,6 @@ export const MessagingRooms: FunctionComponent<Rooms> = ({ messages }) => {
 						messages.map((message, index) => {
 							const { date, time } = message.timeStamp;
 							return (
-								<div>
 									<TableRow key={index}>
 										<TableRowTimeStamp>
 											&nbsp;<span>{time}&nbsp;&nbsp;</span>&nbsp;
@@ -52,7 +51,6 @@ export const MessagingRooms: FunctionComponent<Rooms> = ({ messages }) => {
 										</TableRowUser>
 										<TableRowMessage>{message.message}</TableRowMessage>
 									</TableRow>
-								</div>
 							);
 						})}
 				</TableBody>

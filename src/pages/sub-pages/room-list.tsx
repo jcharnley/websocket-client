@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import cloneDeep from "lodash/cloneDeep";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 // import { ThemeContext } from "styled-components";
 // import { configConsumerProps } from "antd/lib/config-provider";
 
@@ -50,7 +51,7 @@ const RoomListItem = styled.li<listItemProps>`
 	  }
 `;
 
-const RoomListItemSelected = styled("div") <listItemPropsEditStyles>`
+const RoomListItemSelected = styled("div")<listItemPropsEditStyles>`
   ${(props) =>
     props.isIndented &&
     `
@@ -69,9 +70,10 @@ export const Roomlist: FunctionComponent<RoomlistObject> = ({
   msgAlert,
   setMsgAlert,
 }) => {
-  const toggleClass = (id) => {
+  const toggleClass = (id, index) => {
+    console.log("toggleClass", id, index);
     const selectedClone = cloneDeep(isActive);
- console.log("selectedClone",selectedClone)
+
     if (selectedClone === null) {
       setActive(id);
     } else if (selectedClone === id) {
@@ -82,9 +84,27 @@ export const Roomlist: FunctionComponent<RoomlistObject> = ({
   };
 
   const messageAlert = (element) => {
-    // console.log('msgAlert',msgAlert)
-    if (msgAlert.type === "message" && element.id === 0) {
-      return msgAlert.newMsg === true ? "3px solid #52c41a" : null;
+    console.log("msgAlert", msgAlert);
+    console.log("element", element);
+    // return null;
+    if (
+      msgAlert.type === "message" &&
+      !element.privateRoomID &&
+      msgAlert.newMsg === true
+    ) {
+      return "3px solid #52c41a";
+    }
+
+    if (
+      msgAlert.type === "private_message" &&
+      element.privateRoomID &&
+      msgAlert.newMsg === true
+    ) {
+      return "3px solid #52c41a";
+    } 
+    else {
+      // msgAlert.newMsg === false;
+      return "";
     }
     // else {
     //   return (
@@ -94,7 +114,7 @@ export const Roomlist: FunctionComponent<RoomlistObject> = ({
     // msgAlert.type === "message" && isActive !== element.id
   };
 
-  const alertToggle = () => {
+  const clearMessageAlert = () => {
     msgAlert.newMsg = false;
     return "";
   };
@@ -102,33 +122,34 @@ export const Roomlist: FunctionComponent<RoomlistObject> = ({
   return (
     <RoomListComponent>
       <RoomListing>
-        {rooms.map((element, key) => {
-          console.log("isActive, element.id", isActive, element.id)
-          if (isActive === element.id) {
-            element.selected = true;
-          } else {
-            element.selected = false;
-          }
-          return (
-            <RoomListItem
-              style={{
-                backgroundColor:
-                  isActive === element.id ? "#e6f7ff" : "#1890ff",
-                border:
-                  isActive !== element.id
-                    ? messageAlert(element)
-                    : alertToggle(),
-              }}
-              onClick={() => toggleClass(element.id)}
-              open={isActive === element.id}
-            >
-              <span>{element.targetName}</span>
-              {/* <RoomListItemSelected
+        {rooms &&
+          rooms.map((element, index) => {
+            if (isActive === element.privateRoomID) {
+              element.selected = true;
+            } else {
+              element.selected = false;
+            }
+            return (
+              <RoomListItem
+                key={index}
+                style={{
+                  backgroundColor:
+                    isActive === element.privateRoomID ? "#e6f7ff" : "#1890ff",
+                  border:
+                    isActive !== element.privateRoomID
+                      ? messageAlert(element)
+                      : clearMessageAlert(),
+                }}
+                onClick={() => toggleClass(element.privateRoomID, index)}
+                open={isActive === element.privateRoomID}
+              >
+                <span>{element.targetName}</span>
+                {/* <RoomListItemSelected
                 isIndented={isActive === element.id}
               ></RoomListItemSelected> */}
-            </RoomListItem>
-          );
-        })}
+              </RoomListItem>
+            );
+          })}
       </RoomListing>
     </RoomListComponent>
   );

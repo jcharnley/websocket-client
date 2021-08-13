@@ -47,8 +47,8 @@ export const OnlineUser: FunctionComponent<Rooms> = ({ connections, current, set
 	return (
 		<OnlineContainer className={'onlineUsersContainerClass'}>
 			<Online>
-				{connections.map((data, key) => (
-					<ListUser key={key}>
+				{connections.map((data, index) => (
+					<ListUser key={index}>
 						&nbsp;
 						<Username
 						title={data.username}
@@ -58,6 +58,7 @@ export const OnlineUser: FunctionComponent<Rooms> = ({ connections, current, set
 						    title={"private message"}
 							style={{ marginRight: '5px', fontSize: '12px' }}
 							onClick={async (e) => {
+								console.log("data online user", data)
 								current.send(
 									JSON.stringify({
 										id: length,
